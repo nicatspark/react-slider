@@ -45,16 +45,19 @@ const Section = styled.section`
   height: 100%;
   overflow: hidden;
   scroll-snap-align: center;
-  scroll-snap-stop: always;
+  scroll-snap-stop: normal;
   position: relative;
   figure {
-    height: 100%;
+    height: 180px;
     margin: 10px 70px;
+    background: #fff;
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
     img {
       display: inline-block;
       height: 90%;
       object-fit: cover;
       width: 100%;
+      visibility: hidden;
     }
   }
 `;
@@ -72,20 +75,25 @@ function scrollCheck(sliderContainer) {
 function Slider() {
   const sliderContainer = useRef(null);
 
+  const handleScroll = e => {
+    console.log('I am beeing scrolled.');
+  };
   useEffect(() => {
-    console.log(typeof sliderContainer);
-    //   sliderContainer.addEventListener(
-    //     'scroll',
-    //     ()=>scrollCheck(sliderContainer),
-    //   );
+    // console.log(typeof document.addEventListener);
+    sliderContainer.addEventListener(
+      'scroll',
+      () => handleScroll(sliderContainer),
+      true,
+    );
   }, []);
 
   return (
-    <Container ref={sliderContainer}>
+    <Container ref={sliderContainer} onScroll={handleScroll}>
       {payload.map((card, i) => (
         <Section key={i}>
-          <figure className={payload[i].filter}>
-            <img src={payload[i].url} alt="" />
+          <figure className={card.filter}>
+            {console.log(card)}
+            <img src={card.url} alt="" />
           </figure>
         </Section>
       ))}
