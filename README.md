@@ -66,3 +66,12 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `npm run build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+### INSTALLED
+
+182 npm i styled-components
+184 npm install --save lodash
+185 npm install prettier eslint --save-dev
+186 npm install --save-dev eslint-config-prettier eslint-plugin-prettier
+187 npx install-peerdeps --dev eslint-config-airbnb
+188 npm install --save-dev babel-plugin-styled-components
