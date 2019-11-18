@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
-import _ from 'lodash';
+import { debounce } from 'lodash';
 
 const CardsContainer = styled.nav`
   background: orangered;
@@ -15,25 +15,12 @@ const CardSection = styled.section`
   min-width: 100vw;
   height: 100%;
   box-shadow: inset 0px 0px 0px 2px rgb(189, 14, 14);
-  /* overflow: hidden; */
   scroll-snap-align: center;
   scroll-snap-stop: always;
   position: relative;
-  /* figure {
-    height: 180px;
-    width: 300px;
-    margin: 10px 70px;
-    background: #fff;
-    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
-    text-align: center;
-    line-height: 170px;
-    font-size: 180px;
-    font-weight: bold;
-    color: #eee;
-  } */
 `;
 
-const Card = styled.div`
+const CardDiv = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;
@@ -49,38 +36,31 @@ const Card = styled.div`
   color: #eee;
 `;
 
-function Slider(props) {
-  // eslint-disable-next-line
-  const { isScrolled, setScrolled } = useState(false);
-  const sliderContainer = useRef(null);
-  // eslint-disable-next-line
-  const [payload, setPayload] = useState([
-    { itemNr: 1 },
-    { itemNr: 2 },
-    { itemNr: 3 },
-    { itemNr: 4 },
-    { itemNr: 5 },
-    { itemNr: 6 },
-    { itemNr: 7 },
-  ]);
+function Slider({ cards, handleSelect }) {
+  // const { isScrolled, setScrolled } = useState(false);
+  const sliderContainer = useRef();
 
-  const handleScroll = e => {
+  const scrollEnd = e => {
     const selectedCard = Math.round(
       sliderContainer.current.scrollLeft /
         sliderContainer.current.offsetWidth,
     );
-    console.log(selectedCard);
-    props.handleSelect(payload[selectedCard]);
+    console.log(selectedCard + 1);
+    handleSelect(cards[selectedCard]);
   };
+
+  React.useEffect(scrollEnd, []);
+
+  const handleScroll = e => scrollEnd(e);
 
   return (
     <CardsContainer
       ref={sliderContainer}
-      onScroll={_.debounce(handleScroll, 200)}
+      onScroll={debounce(handleScroll, 200)}
     >
-      {payload.map((card, i) => (
+      {cards.map((cardItem, i) => (
         <CardSection key={i}>
-          <Card>{card.itemNr}</Card>
+          <CardDiv>{cardItem.itemNr}</CardDiv>
         </CardSection>
       ))}
     </CardsContainer>

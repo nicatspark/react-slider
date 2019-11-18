@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import Slider from './components/Slider';
 
@@ -39,6 +39,15 @@ const SelectedItem = styled.div`
 `;
 
 function App() {
+  const [cards] = useState([
+    { itemNr: 1 },
+    { itemNr: 2 },
+    { itemNr: 3 },
+    { itemNr: 4 },
+    { itemNr: 5 },
+    { itemNr: 6 },
+    { itemNr: 7 },
+  ]);
   const selectedContainer = useRef();
   const handleSelected = item => {
     const selDisplay = selectedContainer.current;
@@ -53,7 +62,7 @@ function App() {
   return (
     <Container>
       <SelectedItem ref={selectedContainer}>M</SelectedItem>
-      <Slider handleSelect={handleSelected} />
+      <Slider handleSelect={handleSelected} cards={cards} />
     </Container>
   );
 }
