@@ -34,24 +34,44 @@ const CardDiv = styled.div`
   font-size: 180px;
   font-weight: bold;
   color: #eee;
+  cursor: pointer;
 `;
 
-function Slider({ cards, handleSelect }) {
+function Slider({ cards, handleSelect, defaultCard, onCardClick }) {
   // const { isScrolled, setScrolled } = useState(false);
-  const sliderContainer = useRef();
+  // const getCard = index => {
+  //   return cards[index];
+  // };
 
-  const scrollEnd = e => {
-    const selectedCard = Math.round(
+  // eslint-disable-next-line
+  const { selectedCard, setSelectedCard } = React.useState(
+    defaultCard || 4,
+  );
+  const sliderContainer = useRef();
+  const cardEl = useRef();
+
+  function scrollEnd(e) {
+    // debugger;
+    const selectedCardnr = Math.round(
       sliderContainer.current.scrollLeft /
         sliderContainer.current.offsetWidth,
     );
-    console.log(selectedCard + 1);
-    handleSelect(cards[selectedCard]);
-  };
+    console.log(selectedCardnr + 1);
+    handleSelect(cards[selectedCardnr]);
+  }
 
   React.useEffect(scrollEnd, []);
+  // React.useEffect(
+  //   () => cardEl.addEventListener('click', e => console.log(e)),
+  //   [],
+  // );
 
   const handleScroll = e => scrollEnd(e);
+
+  const handleOnClick = e => {
+    e.preventDefault();
+    onCardClick(e);
+  };
 
   return (
     <CardsContainer
@@ -59,8 +79,8 @@ function Slider({ cards, handleSelect }) {
       onScroll={debounce(handleScroll, 200)}
     >
       {cards.map((cardItem, i) => (
-        <CardSection key={i}>
-          <CardDiv>{cardItem.itemNr}</CardDiv>
+        <CardSection key={i} ref={cardEl}>
+          <CardDiv onClick={handleOnClick}>{cardItem.itemNr}</CardDiv>
         </CardSection>
       ))}
     </CardsContainer>

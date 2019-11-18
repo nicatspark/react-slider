@@ -2,6 +2,9 @@ import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import Slider from './components/Slider';
 
+const selectTransitionDelay = 800;
+let alreadyClicked = false;
+
 const Container = styled.div`
   height: 100vh;
   width: 100vw;
@@ -38,6 +41,29 @@ const SelectedItem = styled.div`
   }
 `;
 
+const HighlightSelectAction = styled.div`
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 10px solid rgba(255, 255, 255, 0);
+  transition: ${selectTransitionDelay}ms all ease-out;
+  &.startTransition {
+    transition: unset;
+    border: 10px solid rgba(255, 255, 255, 0.4);
+  }
+  &.endTransition {
+    border: 10px solid rgba(255, 255, 255, 0);
+    width: 200px;
+    height: 200px;
+    transition: unset;
+    transition: ${selectTransitionDelay}ms all ease-out;
+  }
+`;
+
 function App() {
   const [cards] = useState([
     { itemNr: 1 },
@@ -48,9 +74,13 @@ function App() {
     { itemNr: 6 },
     { itemNr: 7 },
   ]);
-  const selectedContainer = useRef();
+
+  const selectTransition = useRef();
+
+  const displayContainer = useRef();
+
   const handleSelected = item => {
-    const selDisplay = selectedContainer.current;
+    const selDisplay = displayContainer.current;
     selDisplay.innerHTML = item.itemNr;
     selDisplay.classList.add('dotransition');
     setTimeout(
@@ -59,10 +89,40 @@ function App() {
     );
   };
 
+  const onCardClick = cardItem => {
+    if (alreadyClicked) return;
+    alreadyClicked = true;
+    const el = selectTransition.current;
+    el.classList.add('startTransition');
+    new Promise(resolve => {
+      setTimeout(() => {
+        el.classList.add('endTransition');
+        resolve();
+      }, 100);
+    }).finally(() => {
+      setTimeout(() => {
+        el.classList.remove('endTransition', 'startTransition');
+        alreadyClicked = false;
+        nextPage();
+      }, selectTransitionDelay);
+    });
+    console.log('Selected Item: ', cardItem);
+
+    function nextPage() {
+      console.log('Next page.');
+    }
+  };
+
   return (
     <Container>
-      <SelectedItem ref={selectedContainer}>M</SelectedItem>
-      <Slider handleSelect={handleSelected} cards={cards} />
+      <SelectedItem ref={displayContainer}>X</SelectedItem>
+      <Slider
+        handleSelect={handleSelected}
+        cards={cards}
+        defaultCard="2"
+        onCardClick={onCardClick}
+      />
+      <HighlightSelectAction ref={selectTransition} />
     </Container>
   );
 }
