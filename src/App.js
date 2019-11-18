@@ -1,13 +1,13 @@
-import React from "react";
-import styled from "styled-components";
-import Slider from "./components/Slider";
+import React from 'react';
+import styled from 'styled-components';
+import Slider from './components/Slider';
 
 const Container = styled.div`
   height: 100vh;
   width: 100vw;
   background: #ccc;
   color: #333;
-  div {
+  & > div {
     position: absolute;
     top: 50%;
     left: 0;

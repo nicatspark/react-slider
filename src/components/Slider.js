@@ -12,13 +12,14 @@ const CardsContainer = styled.div`
 `;
 
 const CardSection = styled.section`
-  min-width: 500px;
+  min-width: 100vw;
   height: 100%;
-  overflow: hidden;
+  box-shadow: inset 0px 0px 0px 2px rgb(189, 14, 14);
+  /* overflow: hidden; */
   scroll-snap-align: center;
   scroll-snap-stop: always;
   position: relative;
-  figure {
+  /* figure {
     height: 180px;
     width: 300px;
     margin: 10px 70px;
@@ -29,26 +30,30 @@ const CardSection = styled.section`
     font-size: 180px;
     font-weight: bold;
     color: #eee;
-    /* &:first-child {
-      margin-left: 200px;
-    }
-    &:last-child {
-      margin-right: 200px;
-    } */
-    /* img {
-      display: inline-block;
-      height: 90%;
-      object-fit: cover;
-      width: 100%;
-      visibility: hidden;
-    } */
-  }
+  } */
+`;
+
+const Card = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 180px;
+  width: 300px;
+  background: #fff;
+  box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  line-height: 170px;
+  font-size: 180px;
+  font-weight: bold;
+  color: #eee;
 `;
 
 function Slider() {
   // eslint-disable-next-line
   const { isScrolled, setScrolled } = useState(false);
   const sliderContainer = useRef(null);
+  // eslint-disable-next-line
   const [payload, setPayload] = useState([
     { card: 1 },
     { card: 2 },
@@ -75,7 +80,7 @@ function Slider() {
     >
       {payload.map((card, i) => (
         <CardSection key={i}>
-          <figure>{card.card}</figure>
+          <Card>{card.card}</Card>
         </CardSection>
       ))}
     </CardsContainer>
