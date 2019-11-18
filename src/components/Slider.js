@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import _ from 'lodash';
 
-const CardsContainer = styled.div`
+const CardsContainer = styled.nav`
   background: orangered;
   font-family: sans-serif;
   scroll-snap-type: x mandatory;
@@ -49,28 +49,28 @@ const Card = styled.div`
   color: #eee;
 `;
 
-function Slider() {
+function Slider(props) {
   // eslint-disable-next-line
   const { isScrolled, setScrolled } = useState(false);
   const sliderContainer = useRef(null);
   // eslint-disable-next-line
   const [payload, setPayload] = useState([
-    { card: 1 },
-    { card: 2 },
-    { card: 3 },
-    { card: 4 },
-    { card: 5 },
-    { card: 6 },
-    { card: 7 },
+    { itemNr: 1 },
+    { itemNr: 2 },
+    { itemNr: 3 },
+    { itemNr: 4 },
+    { itemNr: 5 },
+    { itemNr: 6 },
+    { itemNr: 7 },
   ]);
 
   const handleScroll = e => {
-    console.log(
-      Math.round(
-        sliderContainer.current.scrollLeft /
-          sliderContainer.current.offsetWidth,
-      ) + 1,
+    const selectedCard = Math.round(
+      sliderContainer.current.scrollLeft /
+        sliderContainer.current.offsetWidth,
     );
+    console.log(selectedCard);
+    props.handleSelect(payload[selectedCard]);
   };
 
   return (
@@ -80,7 +80,7 @@ function Slider() {
     >
       {payload.map((card, i) => (
         <CardSection key={i}>
-          <Card>{card.card}</Card>
+          <Card>{card.itemNr}</Card>
         </CardSection>
       ))}
     </CardsContainer>
