@@ -92,6 +92,10 @@ function Slider({ cards, handleSelect, defaultCard, onCardClick }) {
     onCardClick(e);
   };
 
+  const onDragStart = e => {
+    console.log('Drag started.');
+  }
+
   return (
     <CardsContainer
       ref={sliderContainer}
@@ -99,7 +103,7 @@ function Slider({ cards, handleSelect, defaultCard, onCardClick }) {
       onScroll={debounce(handleScroll, 200)}
     >
       {cards.map((cardItem, i) => (
-        <CardSection className="card-section" key={i} ref={cardEl}>
+        <CardSection className="card-section" key={i} ref={cardEl} draggable='true' onDragStart={onDragStart}>
           <CardDiv onClick={handleOnClick}>{cardItem.itemNr}</CardDiv>
         </CardSection>
       ))}
