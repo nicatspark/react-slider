@@ -1,9 +1,18 @@
 import React, { useRef, useState } from 'react';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import Slider from './components/Slider';
 
 const selectTransitionDelay = 800;
 let alreadyClicked = false;
+
+const GlobalStyle = createGlobalStyle`
+  .hidden {
+    display: none !important;
+  }
+  /* body {
+    color: ${props => (props.whiteColor ? 'white' : 'black')};
+  } */
+`;
 
 const Container = styled.div`
   height: 100vh;
@@ -13,10 +22,10 @@ const Container = styled.div`
   user-select: none;
   & > nav {
     position: absolute;
-    top: 65%;
+    bottom: 0;
     left: 0;
     right: 0;
-    height: 200px;
+    height: 220px;
   }
 `;
 
@@ -122,8 +131,11 @@ function App() {
         cards={cards}
         defaultCard="2"
         onCardClick={onCardClick}
+        cardHeight="150px"
+        cardSectionWidth="100vw"
       />
       <HighlightSelectAction ref={selectTransition} />
+      <GlobalStyle />
     </Container>
   );
 }

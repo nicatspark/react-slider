@@ -1,8 +1,10 @@
 import React, { useRef } from 'react';
 import styled from 'styled-components';
 import { debounce } from 'lodash';
-// eslint-disable-next-line
-import feather, { chevronLeft } from '../../node_modules/feather-icons/dist/feather';
+import feather, {
+  // eslint-disable-next-line
+  chevronLeft,
+} from '../../node_modules/feather-icons/dist/feather';
 
 const ComponentWrapper = styled.nav`
   position: relative;
@@ -17,10 +19,12 @@ const CardsContainer = styled.div`
   overflow-x: overlay;
   overflow-y: hidden;
   height: 100%;
-  &::-webkit-scrollbar{
+  &::-webkit-scrollbar {
     height: 8px;
   }
-  &::-webkit-scrollbar-track {}
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
   &::-webkit-scrollbar-thumb {
     background-color: darkgrey;
     border-radius: 4px;
@@ -28,7 +32,7 @@ const CardsContainer = styled.div`
 `;
 
 const CardSection = styled.section`
-  min-width: 100vw;
+  min-width: ${props => props.cardSectionWidth};
   height: 100%;
   scroll-snap-align: center;
   scroll-snap-stop: always;
@@ -37,28 +41,30 @@ const CardSection = styled.section`
 
 const CardDiv = styled.div`
   position: absolute;
-  top: 50%;
+  top: 10px;
   left: 50%;
-  transform: translate(-50%, -50%);
-  height: 180px;
+  transform: translateX(-50%);
+  height: ${props => props.cardHeight};
   width: 300px;
   background: #fff;
   box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
   text-align: center;
-  line-height: 170px;
-  font-size: 180px;
+  line-height: 150px;
+  font-size: 150px;
   font-weight: bold;
   color: #eee;
   cursor: pointer;
 `;
 
 const ChevronDiv = styled.div.attrs(props => ({
-  style: props.right ? {transform:'rotate(180deg)',left:'unset',right:'0'}: null,
+  style: props.right
+    ? { transform: 'rotate(180deg)', left: 'unset', right: '0' }
+    : null,
 }))`
   position: absolute;
-  top: 0;
+  top: 10px;
   left: 0;
-  height: 100%;
+  height: ${props => props.cardHeight};
   width: 50px;
   display: flex;
   justify-content: center;
@@ -68,7 +74,7 @@ const ChevronDiv = styled.div.attrs(props => ({
   &:hover {
     color: #000;
     svg {
-    transform: scale(2.3);
+      transform: scale(2.3);
     }
   }
   svg {
@@ -77,9 +83,14 @@ const ChevronDiv = styled.div.attrs(props => ({
   }
 `;
 
-
-
-function Slider({ cards, handleSelect, defaultCard, onCardClick }) {
+function Slider({
+  cards,
+  handleSelect,
+  defaultCard,
+  onCardClick,
+  cardHeight,
+  cardSectionWidth,
+}) {
   // const { isScrolled, setScrolled } = useState(false);
   // const getCard = index => {
   //   return cards[index];
@@ -108,20 +119,27 @@ function Slider({ cards, handleSelect, defaultCard, onCardClick }) {
     handleSelect(cards[selectedCardnr]);
 
     function isScrollBegining() {
-      document.querySelector('.chevron.left').style.display='none';
+      document.querySelector('.chevron.left').classList.add('hidden');
     }
     function isScrollEnd() {
-      document.querySelector('.chevron.left').style.display='none';
+      document
+        .querySelector('.chevron.right')
+        .classList.add('hidden');
     }
     function isScrollMiddle() {
-      document.querySelector('.chevron.left').style.display='flex';
+      document
+        .querySelector('.chevron.left')
+        .classList.remove('hidden');
+      document
+        .querySelector('.chevron.right')
+        .classList.remove('hidden');
     }
   }
 
   // Do when component starts up.
   React.useEffect(scrollStop, []);
   // Initiate React Feather icons.
-  React.useEffect(() => feather.replace(),[]);
+  React.useEffect(() => feather.replace(), []);
   // Store width of one section in preparation for a desktop view.
   React.useEffect(() => {
     setSectionWidth(cardEl.current.offsetWidth);
@@ -137,7 +155,7 @@ function Slider({ cards, handleSelect, defaultCard, onCardClick }) {
 
   const onDragStart = e => {
     console.log('Drag started.');
-  }
+  };
 
   return (
     <ComponentWrapper ref={componentWrapper}>
@@ -147,13 +165,34 @@ function Slider({ cards, handleSelect, defaultCard, onCardClick }) {
         onScroll={debounce(handleScroll, 200)}
       >
         {cards.map((cardItem, i) => (
-          <CardSection className="card-section" key={i} ref={cardEl} draggable='true' onDragStart={onDragStart}>
-            <CardDiv onClick={handleOnClick}>{cardItem.itemNr}</CardDiv>
+          <CardSection
+            className="card-section"
+            key={i}
+            ref={cardEl}
+            draggable="true"
+            onDragStart={onDragStart}
+            cardSectionWidth={cardSectionWidth}
+          >
+            <CardDiv onClick={handleOnClick} cardHeight={cardHeight}>
+              {cardItem.itemNr}
+            </CardDiv>
           </CardSection>
         ))}
       </CardsContainer>
-      <ChevronDiv left className="chevron left"><i data-feather="chevron-left"></i></ChevronDiv>
-      <ChevronDiv right className="chevron right"><i data-feather="chevron-left"></i></ChevronDiv>
+      <ChevronDiv
+        left
+        cardHeight={cardHeight}
+        className="chevron left"
+      >
+        <i data-feather="chevron-left"></i>
+      </ChevronDiv>
+      <ChevronDiv
+        right
+        cardHeight={cardHeight}
+        className="chevron right"
+      >
+        <i data-feather="chevron-left"></i>
+      </ChevronDiv>
     </ComponentWrapper>
   );
 }
