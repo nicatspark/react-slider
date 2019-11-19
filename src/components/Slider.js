@@ -47,26 +47,36 @@ function Slider({ cards, handleSelect, defaultCard, onCardClick }) {
   const { selectedCard, setSelectedCard } = React.useState(
     defaultCard || 4,
   );
+  // eslint-disable-next-line
+  const [sectionWidth, setSectionWidth] = React.useState(0);
   const sliderContainer = useRef();
   const cardEl = useRef();
 
-  function scrollEnd(e) {
+  function scrollStop(e) {
     // debugger;
     const selectedCardnr = Math.round(
       sliderContainer.current.scrollLeft /
         sliderContainer.current.offsetWidth,
     );
+    if (selectedCardnr === 0) isScrollStart();
+    else if (selectedCardnr >= cards.length - 1) isScrollEnd();
     console.log(selectedCardnr + 1);
     handleSelect(cards[selectedCardnr]);
+
+    function isScrollStart() {
+      console.log('Scroll start.');
+    }
+    function isScrollEnd() {
+      console.log('Scroll end.');
+    }
   }
 
-  React.useEffect(scrollEnd, []);
-  // React.useEffect(
-  //   () => cardEl.addEventListener('click', e => console.log(e)),
-  //   [],
-  // );
+  React.useEffect(scrollStop, []);
+  React.useEffect(() => {
+    setSectionWidth(cardEl.current.offsetWidth);
+  }, []);
 
-  const handleScroll = e => scrollEnd(e);
+  const handleScroll = e => scrollStop(e);
 
   const handleOnClick = e => {
     e.preventDefault();
@@ -76,10 +86,11 @@ function Slider({ cards, handleSelect, defaultCard, onCardClick }) {
   return (
     <CardsContainer
       ref={sliderContainer}
+      className="cards-container"
       onScroll={debounce(handleScroll, 200)}
     >
       {cards.map((cardItem, i) => (
-        <CardSection key={i} ref={cardEl}>
+        <CardSection className="card-section" key={i} ref={cardEl}>
           <CardDiv onClick={handleOnClick}>{cardItem.itemNr}</CardDiv>
         </CardSection>
       ))}
