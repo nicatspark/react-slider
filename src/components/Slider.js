@@ -8,7 +8,16 @@ const CardsContainer = styled.nav`
   scroll-snap-type: x mandatory;
   display: flex;
   -webkit-overflow-scrolling: touch;
-  overflow-x: scroll;
+  overflow-x: overlay;
+  overflow-y: hidden;
+  &::-webkit-scrollbar{
+    width: 8px;
+  }
+  &::-webkit-scrollbar-track {}
+  &::-webkit-scrollbar-thumb {
+    background-color: darkgrey;
+    border-radius: 4px;
+  }
 `;
 
 const CardSection = styled.section`

@@ -10,6 +10,7 @@ const Container = styled.div`
   width: 100vw;
   background: #ccc;
   color: #333;
+  user-select: none;
   & > nav {
     position: absolute;
     top: 65%;
