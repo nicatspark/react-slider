@@ -36,7 +36,7 @@ function Selectors({ cards, selectedCardIndex }) {
       {cards.map((cardItem, i) => (
         <Selector
           key={i}
-          className={i + 1 === selectedCardIndex ? 'selected' : null}
+          className={i === selectedCardIndex ? 'selected' : null}
         >
           <div></div>
         </Selector>

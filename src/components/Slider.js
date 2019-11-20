@@ -98,22 +98,21 @@ function Slider({
   // };
 
   // eslint-disable-next-line
-  const { selectedCardState, setSelectedCardState } = React.useState(
-    4,
-  );
+  const [selectedCardState, setSelectedCardState] = React.useState(4);
   // eslint-disable-next-line
   const [sectionWidth, setSectionWidth] = React.useState(0);
   const componentWrapper = useRef();
   const sliderContainer = useRef();
+  const chevronLeft = useRef();
+  const chevronRight = useRef();
   const cardEl = useRef();
 
   const scrollStop = e => {
-    // debugger;
     const calcSelectedCardnr = Math.round(
       sliderContainer.current.scrollLeft /
         sliderContainer.current.offsetWidth,
     );
-    // setSelectedCardState(calcSelectedCardnr);
+    setSelectedCardState(calcSelectedCardnr);
     if (calcSelectedCardnr === 0) isScrollBegining();
     else if (calcSelectedCardnr >= cards.length - 1) isScrollEnd();
     else isScrollMiddle();
@@ -121,20 +120,14 @@ function Slider({
     handleSelect(cards[calcSelectedCardnr]);
 
     function isScrollBegining() {
-      document.querySelector('.chevron.left').classList.add('hidden');
+      chevronLeft.current.classList.add('hidden');
     }
     function isScrollEnd() {
-      document
-        .querySelector('.chevron.right')
-        .classList.add('hidden');
+      chevronRight.current.classList.add('hidden');
     }
     function isScrollMiddle() {
-      document
-        .querySelector('.chevron.left')
-        .classList.remove('hidden');
-      document
-        .querySelector('.chevron.right')
-        .classList.remove('hidden');
+      chevronRight.current.classList.remove('hidden');
+      chevronLeft.current.classList.remove('hidden');
     }
   };
 
@@ -146,7 +139,8 @@ function Slider({
     // Store width of one section in preparation for a desktop view.
     setSectionWidth(cardEl.current.offsetWidth);
     // Listen for scroll start.
-    document.querySelector('.cards-container').addEventListener(
+    const slConEl = sliderContainer.current;
+    slConEl.addEventListener(
       'scroll',
       debounce(scrollStart, 200, {
         leading: true,
@@ -157,7 +151,7 @@ function Slider({
       console.log('Scroll event started.');
     }
     return () => {
-      document.querySelector('.cards-container').removeEventListener(
+      slConEl.removeEventListener(
         'scroll',
         debounce(scrollStart, 200, {
           leading: true,
@@ -173,6 +167,7 @@ function Slider({
   };
 
   const onDragStart = e => {
+    // TODO
     console.log('Drag started.');
   };
 
@@ -206,6 +201,7 @@ function Slider({
         left
         cardHeight={cardHeight}
         className="chevron left"
+        ref={chevronLeft}
       >
         <i data-feather="chevron-left"></i>
       </ChevronDiv>
@@ -213,6 +209,7 @@ function Slider({
         right
         cardHeight={cardHeight}
         className="chevron right"
+        ref={chevronRight}
       >
         <i data-feather="chevron-left"></i>
       </ChevronDiv>
