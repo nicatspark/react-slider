@@ -99,7 +99,7 @@ function Slider({
 
   // eslint-disable-next-line
   const { selectedCardState, setSelectedCardState } = React.useState(
-    selectedCard || 4,
+    4,
   );
   // eslint-disable-next-line
   const [sectionWidth, setSectionWidth] = React.useState(0);
@@ -107,13 +107,13 @@ function Slider({
   const sliderContainer = useRef();
   const cardEl = useRef();
 
-  function scrollStop(e) {
+  const scrollStop = e => {
     // debugger;
     const calcSelectedCardnr = Math.round(
       sliderContainer.current.scrollLeft /
         sliderContainer.current.offsetWidth,
     );
-    // setSelectedCard(calcSelectedCardnr);
+    // setSelectedCardState(calcSelectedCardnr);
     if (calcSelectedCardnr === 0) isScrollBegining();
     else if (calcSelectedCardnr >= cards.length - 1) isScrollEnd();
     else isScrollMiddle();
@@ -136,15 +136,16 @@ function Slider({
         .querySelector('.chevron.right')
         .classList.remove('hidden');
     }
-  }
+  };
 
   // Do when component starts up.
   React.useEffect(scrollStop, []);
-  // Initiate React Feather icons.
-  React.useEffect(() => feather.replace(), []);
-  // Store width of one section in preparation for a desktop view.
+
   React.useEffect(() => {
+    feather.replace(); // Initiate React Feather icons.
+    // Store width of one section in preparation for a desktop view.
     setSectionWidth(cardEl.current.offsetWidth);
+    // Listen for scroll start.
     document.querySelector('.cards-container').addEventListener(
       'scroll',
       debounce(scrollStart, 200, {
@@ -166,9 +167,6 @@ function Slider({
     };
   }, []);
 
-  // Get called debounced at the trailing end, ie when motion stops.
-  const handleScroll = e => scrollStop(e);
-
   const handleOnClick = e => {
     e.preventDefault();
     onCardClick(e);
@@ -183,7 +181,7 @@ function Slider({
       <CardsContainer
         ref={sliderContainer}
         className="cards-container"
-        onScroll={debounce(handleScroll, 200)}
+        onScroll={debounce(scrollStop, 200)}
       >
         {cards.map((cardItem, i) => (
           <CardSection
@@ -200,7 +198,10 @@ function Slider({
           </CardSection>
         ))}
       </CardsContainer>
-      <Selectors cards={cards} selectedItem={selectedCardState} />
+      <Selectors
+        cards={cards}
+        selectedCardIndex={selectedCardState}
+      />
       <ChevronDiv
         left
         cardHeight={cardHeight}

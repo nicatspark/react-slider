@@ -21,20 +21,22 @@ const Selector = styled.div`
     transition: 200ms transform;
   }
   &:hover > div {
-    transform: scaleY(1.3);
+    transform: scaleY(1.4);
+    background-color: rgba(0, 0, 0, 0.6);
   }
   &.selected > div {
     background-color: rgba(0, 0, 0, 0.8);
   }
 `;
 
-function Selectors({ cards, selectedCard }) {
+function Selectors({ cards, selectedCardIndex }) {
+  // console.log(selectedCardIndex);
   return (
     <SelectorContainer>
       {cards.map((cardItem, i) => (
         <Selector
           key={i}
-          className={i === selectedCard ? 'selected' : null}
+          className={i + 1 === selectedCardIndex ? 'selected' : null}
         >
           <div></div>
         </Selector>
