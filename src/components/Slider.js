@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import Selectors from './Selectors';
 import styled from 'styled-components';
 import { debounce } from 'lodash';
 import feather, {
@@ -112,6 +113,7 @@ function Slider({
       sliderContainer.current.scrollLeft /
         sliderContainer.current.offsetWidth,
     );
+    // setSelectedCard(selectedCardnr);
     if (selectedCardnr === 0) isScrollBegining();
     else if (selectedCardnr >= cards.length - 1) isScrollEnd();
     else isScrollMiddle();
@@ -143,6 +145,25 @@ function Slider({
   // Store width of one section in preparation for a desktop view.
   React.useEffect(() => {
     setSectionWidth(cardEl.current.offsetWidth);
+    document.querySelector('.cards-container').addEventListener(
+      'scroll',
+      debounce(scrollStart, 200, {
+        leading: true,
+        trailing: false,
+      }),
+    );
+    function scrollStart() {
+      console.log('start scrolling');
+    }
+    return () => {
+      document.querySelector('.cards-container').removeEventListener(
+        'scroll',
+        debounce(scrollStart, 200, {
+          leading: true,
+          trailing: false,
+        }),
+      );
+    };
   }, []);
 
   // Get called debounced at the trailing end, ie when motion stops.
@@ -179,6 +200,7 @@ function Slider({
           </CardSection>
         ))}
       </CardsContainer>
+      <Selectors cards={cards} selectedItem={selectedCard} />
       <ChevronDiv
         left
         cardHeight={cardHeight}
