@@ -131,6 +131,31 @@ function Slider({
     }
   };
 
+  const gotoNext = () => {
+    gotoCard(Math.min(cards.length, selectedCardState + 1));
+  };
+
+  const gotoPrevious = () => {
+    gotoCard(Math.max(0, selectedCardState - 1));
+  };
+
+  const gotoCard = index => {
+    const xpos = Math.round(
+      (sliderContainer.current.offsetWidth / (cards.length + 1)) *
+        index,
+    );
+    // ScrollTo is not safari.
+    // sliderContainer.current.scrollTo({
+    //   left: -300,
+    //   behavior: 'smooth',
+    // });
+    sliderContainer.current.children[index].scrollIntoView({
+      behavior: 'smooth',
+      block: 'end',
+      inline: 'nearest',
+    });
+  };
+
   // Do when component starts up.
   React.useEffect(scrollStop, []);
 
@@ -202,6 +227,7 @@ function Slider({
         cardHeight={cardHeight}
         className="chevron left"
         ref={chevronLeft}
+        onClick={gotoPrevious}
       >
         <i data-feather="chevron-left"></i>
       </ChevronDiv>
@@ -210,6 +236,7 @@ function Slider({
         cardHeight={cardHeight}
         className="chevron right"
         ref={chevronRight}
+        onClick={gotoNext}
       >
         <i data-feather="chevron-left"></i>
       </ChevronDiv>

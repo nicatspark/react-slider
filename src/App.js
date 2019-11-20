@@ -85,9 +85,7 @@ function App() {
     { itemNr: 7 },
   ]);
   const [selectedCard, setSelectedCard] = useState(4);
-
   const selectTransition = useRef();
-
   const displayContainer = useRef();
 
   const handleSelected = item => {
