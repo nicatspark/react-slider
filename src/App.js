@@ -84,19 +84,21 @@ function App() {
     { itemNr: 6 },
     { itemNr: 7 },
   ]);
+  const [selectedCard, setSelectedCard] = useState(4);
 
   const selectTransition = useRef();
 
   const displayContainer = useRef();
 
   const handleSelected = item => {
-    const selDisplay = displayContainer.current;
-    selDisplay.innerHTML = item.itemNr;
-    selDisplay.classList.add('dotransition');
+    const selDisplayEl = displayContainer.current;
+    selDisplayEl.innerHTML = item.itemNr;
+    selDisplayEl.classList.add('dotransition');
     setTimeout(
-      () => selDisplay.classList.remove('dotransition'),
+      () => selDisplayEl.classList.remove('dotransition'),
       100,
     );
+    setSelectedCard(item.itemNr);
   };
 
   const onCardClick = cardItem => {
@@ -129,7 +131,7 @@ function App() {
       <Slider
         handleSelect={handleSelected}
         cards={cards}
-        defaultCard="2"
+        selectedCard={selectedCard}
         onCardClick={onCardClick}
         cardHeight="150px"
         cardSectionWidth="100vw"

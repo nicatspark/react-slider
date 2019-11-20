@@ -87,7 +87,7 @@ const ChevronDiv = styled.div.attrs(props => ({
 function Slider({
   cards,
   handleSelect,
-  defaultCard,
+  selectedCard,
   onCardClick,
   cardHeight,
   cardSectionWidth,
@@ -98,8 +98,8 @@ function Slider({
   // };
 
   // eslint-disable-next-line
-  const { selectedCard, setSelectedCard } = React.useState(
-    defaultCard || 4,
+  const { selectedCardState, setSelectedCardState } = React.useState(
+    selectedCard || 4,
   );
   // eslint-disable-next-line
   const [sectionWidth, setSectionWidth] = React.useState(0);
@@ -109,16 +109,16 @@ function Slider({
 
   function scrollStop(e) {
     // debugger;
-    const selectedCardnr = Math.round(
+    const calcSelectedCardnr = Math.round(
       sliderContainer.current.scrollLeft /
         sliderContainer.current.offsetWidth,
     );
-    // setSelectedCard(selectedCardnr);
-    if (selectedCardnr === 0) isScrollBegining();
-    else if (selectedCardnr >= cards.length - 1) isScrollEnd();
+    // setSelectedCard(calcSelectedCardnr);
+    if (calcSelectedCardnr === 0) isScrollBegining();
+    else if (calcSelectedCardnr >= cards.length - 1) isScrollEnd();
     else isScrollMiddle();
-    console.log(selectedCardnr + 1);
-    handleSelect(cards[selectedCardnr]);
+    console.log(calcSelectedCardnr + 1);
+    handleSelect(cards[calcSelectedCardnr]);
 
     function isScrollBegining() {
       document.querySelector('.chevron.left').classList.add('hidden');
@@ -153,7 +153,7 @@ function Slider({
       }),
     );
     function scrollStart() {
-      console.log('start scrolling');
+      console.log('Scroll event started.');
     }
     return () => {
       document.querySelector('.cards-container').removeEventListener(
@@ -200,7 +200,7 @@ function Slider({
           </CardSection>
         ))}
       </CardsContainer>
-      <Selectors cards={cards} selectedItem={selectedCard} />
+      <Selectors cards={cards} selectedItem={selectedCardState} />
       <ChevronDiv
         left
         cardHeight={cardHeight}
