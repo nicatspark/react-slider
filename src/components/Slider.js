@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Selectors from './Selectors';
 import styled from 'styled-components';
 import { debounce } from 'lodash';
@@ -98,9 +98,12 @@ function Slider({
   // };
 
   // eslint-disable-next-line
-  const [selectedCardState, setSelectedCardState] = React.useState(4);
+  const [selectedCardState, setSelectedCardState] = useState(2);
   // eslint-disable-next-line
-  const [sectionWidth, setSectionWidth] = React.useState(0);
+  const [sectionWidth, setSectionWidth] = useState(0);
+  const [desiredCardIndex, setDesiredCardIndex] = useState(
+    selectedCardState,
+  );
   const componentWrapper = useRef();
   const sliderContainer = useRef();
   const chevronLeft = useRef();
@@ -116,7 +119,6 @@ function Slider({
     if (calcSelectedCardnr === 0) isScrollBegining();
     else if (calcSelectedCardnr >= cards.length - 1) isScrollEnd();
     else isScrollMiddle();
-    console.log(calcSelectedCardnr + 1);
     handleSelect(cards[calcSelectedCardnr]);
 
     function isScrollBegining() {
@@ -132,19 +134,21 @@ function Slider({
   };
 
   const gotoNext = () => {
-    gotoCard(Math.min(cards.length, selectedCardState + 1));
+    const index = Math.min(cards.length, selectedCardState + 1);
+    setDesiredCardIndex(index);
   };
 
   const gotoPrevious = () => {
-    gotoCard(Math.max(0, selectedCardState - 1));
+    const index = Math.max(0, selectedCardState - 1);
+    setDesiredCardIndex(index);
   };
 
   const gotoCard = index => {
-    const xpos = Math.round(
-      (sliderContainer.current.offsetWidth / (cards.length + 1)) *
-        index,
-    );
-    // ScrollTo is not safari.
+    // const xpos = Math.round(
+    //   (sliderContainer.current.offsetWidth / (cards.length + 1)) *
+    //     index,
+    // );
+    // ScrollTo is not safari compartible.
     // sliderContainer.current.scrollTo({
     //   left: -300,
     //   behavior: 'smooth',
@@ -156,10 +160,15 @@ function Slider({
     });
   };
 
-  // Do when component starts up.
-  React.useEffect(scrollStop, []);
+  useEffect(() => {
+    if (Number.isInteger(desiredCardIndex))
+      gotoCard(desiredCardIndex);
+  }, [desiredCardIndex]);
 
-  React.useEffect(() => {
+  // Do when component starts up.
+  useEffect(scrollStop, []);
+
+  useEffect(() => {
     feather.replace(); // Initiate React Feather icons.
     // Store width of one section in preparation for a desktop view.
     setSectionWidth(cardEl.current.offsetWidth);
@@ -221,6 +230,7 @@ function Slider({
       <Selectors
         cards={cards}
         selectedCardIndex={selectedCardState}
+        gotoCard={gotoCard}
       />
       <ChevronDiv
         left

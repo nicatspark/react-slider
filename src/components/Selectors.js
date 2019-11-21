@@ -21,7 +21,7 @@ const Selector = styled.div`
     transition: 200ms transform;
   }
   &:hover > div {
-    transform: scaleY(1.4);
+    transform: scaleY(1.8);
     background-color: rgba(0, 0, 0, 0.6);
   }
   &.selected > div {
@@ -29,14 +29,14 @@ const Selector = styled.div`
   }
 `;
 
-function Selectors({ cards, selectedCardIndex }) {
-  // console.log(selectedCardIndex);
+function Selectors({ cards, selectedCardIndex, gotoCard }) {
   return (
     <SelectorContainer>
       {cards.map((cardItem, i) => (
         <Selector
           key={i}
           className={i === selectedCardIndex ? 'selected' : null}
+          onClick={() => gotoCard(i)}
         >
           <div></div>
         </Selector>
