@@ -98,7 +98,7 @@ function Slider({
   // };
 
   // eslint-disable-next-line
-  const [selectedCardState, setSelectedCardState] = useState(2);
+  const [selectedCardState, setSelectedCardState] = useState(selectedCard);
   // eslint-disable-next-line
   const [sectionWidth, setSectionWidth] = useState(0);
   const [desiredCardIndex, setDesiredCardIndex] = useState(

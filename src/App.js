@@ -84,7 +84,7 @@ function App() {
     { itemNr: 6 },
     { itemNr: 7 },
   ]);
-  const [selectedCard, setSelectedCard] = useState(4);
+  const [selectedCard, setSelectedCard] = useState(3);
   const selectTransition = useRef();
   const displayContainer = useRef();
 
