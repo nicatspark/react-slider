@@ -98,12 +98,15 @@ function Slider({
   // };
 
   // eslint-disable-next-line
-  const [selectedCardState, setSelectedCardState] = useState(selectedCard);
+  const [selectedCardState, setSelectedCardState] = useState(
+    selectedCard,
+  );
   // eslint-disable-next-line
   const [sectionWidth, setSectionWidth] = useState(0);
   const [desiredCardIndex, setDesiredCardIndex] = useState(
     selectedCardState,
   );
+  const latestDesiredCardIndex = useRef(desiredCardIndex);
   const componentWrapper = useRef();
   const sliderContainer = useRef();
   const chevronLeft = useRef();
@@ -134,30 +137,30 @@ function Slider({
   };
 
   const gotoNext = () => {
-    const index = Math.min(cards.length, selectedCardState + 1);
+    latestDesiredCardIndex.current++;
+    const index = Math.min(
+      cards.length,
+      latestDesiredCardIndex.current,
+    );
     setDesiredCardIndex(index);
   };
 
   const gotoPrevious = () => {
-    const index = Math.max(0, selectedCardState - 1);
+    latestDesiredCardIndex.current--;
+    const index = Math.max(0, latestDesiredCardIndex.current);
     setDesiredCardIndex(index);
   };
 
   const gotoCard = index => {
-    // const xpos = Math.round(
-    //   (sliderContainer.current.offsetWidth / (cards.length + 1)) *
-    //     index,
-    // );
-    // ScrollTo is not safari compartible.
-    // sliderContainer.current.scrollTo({
-    //   left: -300,
-    //   behavior: 'smooth',
-    // });
-    sliderContainer.current.children[index].scrollIntoView({
-      behavior: 'smooth',
-      block: 'end',
-      inline: 'nearest',
-    });
+    try {
+      sliderContainer.current.children[index].scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+        inline: 'nearest',
+      });
+    } catch (e) {
+      return;
+    }
   };
 
   useEffect(() => {
