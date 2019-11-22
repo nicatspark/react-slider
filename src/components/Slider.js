@@ -30,6 +30,10 @@ const CardsContainer = styled.div`
     background-color: darkgrey;
     border-radius: 4px;
   }
+  &.drag-active {
+    cursor: grabbing !important;
+    scroll-snap-type: unset;
+  }
 `;
 
 const CardSection = styled.section`
@@ -203,10 +207,38 @@ function Slider({
     onCardClick(e);
   };
 
-  const onDragStart = e => {
-    // TODO
-    console.log('Drag started.');
-  };
+  useEffect(() => {
+    // This enables dragging
+    // TODO: When released, store index of card in view to state and use gotoCard.
+    const slidCont = sliderContainer.current;
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    slidCont.addEventListener('mousedown', e => {
+      isDown = true;
+      slidCont.classList.add('drag-active');
+      startX = e.pageX - slidCont.offsetLeft;
+      scrollLeft = slidCont.scrollLeft;
+    });
+    slidCont.addEventListener('mouseleave', () => {
+      isDown = false;
+      slidCont.classList.remove('drag-active');
+    });
+    slidCont.addEventListener('mouseup', () => {
+      isDown = false;
+      slidCont.classList.remove('drag-active');
+    });
+    slidCont.addEventListener('mousemove', e => {
+      if (!isDown) return;
+      e.preventDefault();
+      window.requestAnimationFrame(() => {
+        const x = e.pageX - slidCont.offsetLeft;
+        const walk = (x - startX) * 3; //scroll-fast
+        slidCont.scrollLeft = scrollLeft - walk;
+      });
+    });
+  }, []);
 
   return (
     <ComponentWrapper ref={componentWrapper}>
@@ -220,8 +252,6 @@ function Slider({
             className="card-section"
             key={i}
             ref={cardEl}
-            draggable="true"
-            onDragStart={onDragStart}
             cardSectionWidth={cardSectionWidth}
           >
             <CardDiv onClick={handleOnClick} cardHeight={cardHeight}>
